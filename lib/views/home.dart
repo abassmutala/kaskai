@@ -274,7 +274,13 @@ class _HomeState extends State<Home> {
       itemCount: chatMessages.length,
       itemBuilder: (context, index) {
         final message = chatMessages[index];
-        return ChatMessage(sender: message["sender"], message: message);
+        final bool isNewMessage =
+            chatMessages.indexOf(message) >= chatMessages.length - 1;
+        return ChatMessage(
+          sender: message["sender"],
+          message: message,
+          isNewMessage: isNewMessage,
+        );
       },
     );
   }

@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:kaskai/constants/ui_constants.dart';
+import 'package:kaskai/widgets/typewriter_text.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 class ChatMessage extends StatelessWidget {
-  const ChatMessage({super.key, required this.sender, required this.message});
+  const ChatMessage({super.key, required this.sender, required this.message, required this.isNewMessage});
   final String sender;
   final Map<String, dynamic> message;
+  final bool isNewMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +18,10 @@ class ChatMessage extends StatelessWidget {
 
     var userMessage = sender == "user";
     final alignment =
-        userMessage ? Alignment.centerRight : Alignment.centerLeft;
+        userMessage ? Alignment.centerRight : Alignment.center;
     final margin = userMessage
         ? EdgeInsets.only(left: desktop ? 56.0 : Sizes.xl)
-        : EdgeInsets.only(right: desktop ? 56.0 : Sizes.xl);
+        : EdgeInsets.zero;
     final bgColor =
         userMessage ? theme.colorScheme.primary : Colors.transparent;
     final color = userMessage ? Colors.white : Colors.black;
@@ -38,7 +40,14 @@ class ChatMessage extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            MarkdownBody(
+            
+            isNewMessage ? TypewriterText(
+                text: message["message"]!,
+                textStyle: theme.textTheme.bodyMedium!.copyWith(
+                  color: color,
+                ),
+                duration: const Duration(milliseconds: 50),
+              ): MarkdownBody(
               data: message["message"]!,
               selectable: true,
               styleSheet: MarkdownStyleSheet(
